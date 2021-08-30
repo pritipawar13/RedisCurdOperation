@@ -1,13 +1,13 @@
 const router = require('express').Router();
-const { AddTask , ShowTask, MarkCompleted, ShowAllCompletedTask,RemoveAllCompletedTask,UserAndTask} = require('../Controller/Task-Controller')
-
-router.post('/add-new-task/:userid', AddTask);
-router.get('/task-of-user/:username',ShowTask);
-router.put('/mark-completed-task/:taskid',MarkCompleted);
-router.get('/all-completed-task',ShowAllCompletedTask);
-router.delete('/remove-all-completed-task',RemoveAllCompletedTask);
-router.get('/user-info-and-task/:userid',UserAndTask);
-
+//const { AddTask , ShowTask, MarkCompleted, ShowAllCompletedTask,ShowUncompletedTask,RemoveAllCompletedTask,UserAndTask} = require('../Controller/Task-Controller')
+const Task=require('../Controller/Task-Controller')
+router.post('/add-new-task/:userid', Task.AddTask);
+router.get('/task-of-user/:username',Task.ShowTask);
+router.put('/mark-completed-task/:taskid',Task.MarkCompleted);
+router.get('/all-completed-task',Task.ShowAllCompletedTask);
+router.delete('/remove-all-completed-task',Task.RemoveAllCompletedTask);
+router.get('/user-info-and-task/:userid',Task.UserAndTask);
+router.get('/all-uncompleted-task',Task.ShowUncompletedTask);
 
 
 

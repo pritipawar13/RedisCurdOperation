@@ -62,6 +62,17 @@ const ShowAllCompletedTask = async(req,res,next) => {
     })
 }
 
+const ShowUncompletedTask = async(req,res,next) =>{
+  await UserTask.find({Completed :false}).exec((err,data) => {
+      res.status(200).json({
+          status:200,
+          success :true,
+          Message :' All Uncompleted Task..',
+          Data :data
+      })
+  })  
+}
+
 const RemoveAllCompletedTask = async(req,res,next) => {
     await UserTask.findOneAndDelete({ Completed:true}).exec()
     res.status(200).json({
@@ -85,6 +96,7 @@ module.exports={
    ShowTask,
    MarkCompleted,
    ShowAllCompletedTask,
+   ShowUncompletedTask,
    RemoveAllCompletedTask,
    UserAndTask
 }
