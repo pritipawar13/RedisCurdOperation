@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const UserTask = require('../Model/Tasks');
+const TaskRepository = require('../Repository/Task-Repository')
 
 const AddTask =async (req,res,next) =>{
     if(req.body.Completed === false){
@@ -26,13 +27,12 @@ const AddTask =async (req,res,next) =>{
 }
 // get all task which are created by perticular username.
 const ShowTask = async(req,res,next) =>{
-    UserTask.find({Username : req.params.username}).exec((err,data)=>{
+       let response = await TaskRepository.ShowAllTasks(req.params.username)
         res.status(200).json({
             status :200,
             success :true,
-            Data : data
+            Data : response
         }) 
-    })
 }
 
 const MarkCompleted = async(req,res,next) =>{
@@ -43,8 +43,8 @@ const MarkCompleted = async(req,res,next) =>{
             message : ` ${req.params.taskid} Not Completed There Task ...`
         }) 
     }
-    await UserTask.findByIdAndUpdate({ _id : req.params.taskid },{ $set :{ Completed :req.body.completed , CompletedTime: new Date()}})
-   res.status(200).json({
+    await TaskRepository.MarkCompletedTask(req.params.taskid , req.body.completed)
+    res.status(200).json({
     status :200,
     success :true,
     message : ` ${req.params.taskid} Completed Task ...`
@@ -52,29 +52,27 @@ const MarkCompleted = async(req,res,next) =>{
   }
 
 const ShowAllCompletedTask = async(req,res,next) => {
-    await UserTask.find({ Completed :true}).exec((err,data) =>{
-        res.status(200).json({
-            status :200,
-            success :true,
-            message :'All Completed Task ... ' ,
-            Data : data
-        })  
-    })
+    let response = await TaskRepository.ShowAllCompletedTask()
+    res.status(200).json({
+        status :200,
+        success :true,
+        message :'All Completed Task ... ' ,
+        Data : response
+    })  
 }
 
-const ShowUncompletedTask = async(req,res,next) =>{
-  await UserTask.find({Completed :false}).exec((err,data) => {
+const ShowUncompletedTask = async(req,res,next) => {
+    const response = await TaskRepository.ShowUncompletedTask()
       res.status(200).json({
           status:200,
-          success :true,
+          success : true,
           Message :' All Uncompleted Task..',
-          Data :data
-      })
-  })  
+          Data : response
+      }) 
 }
 
 const RemoveAllCompletedTask = async(req,res,next) => {
-    await UserTask.findOneAndDelete({ Completed:true}).exec()
+    await TaskRepository.RemoveAllCompletedTask()
     res.status(200).json({
         status :200,
         success :true,
@@ -82,10 +80,13 @@ const RemoveAllCompletedTask = async(req,res,next) => {
     })
 }
 
-const UserAndTask = async(req,res,next) =>{
-    await UserTask.find({userid:req.params.userid}).populate({ path: 'User', select: 'Firstname Lastname Email Type' }).exec((err, result) => {
-        res.json(result);
-      });
+const UserAndTask = async(req,res,next) => {
+   let response = await TaskRepository.UserAndTask(req.params.userid);
+   res.status(200).json({
+    status :200,
+    success :true,
+    data : response
+})
 
 }
 
