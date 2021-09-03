@@ -27,7 +27,7 @@ const AddTask =async (req,res,next) =>{
 }
 // get all task which are created by perticular username.
 const ShowTask = async(req,res,next) =>{
-       let response = await TaskRepository.ShowAllTasks(req.params.username)
+       let response = await TaskRepository.ShowAllTasks(req.query)
         res.status(200).json({
             status :200,
             success :true,
@@ -43,7 +43,7 @@ const MarkCompleted = async(req,res,next) =>{
             message : ` ${req.params.taskid} Not Completed There Task ...`
         }) 
     }
-    await TaskRepository.MarkCompletedTask(req.params.taskid , req.body.completed)
+   await TaskRepository.MarkCompletedTask(req.params , req.body)
     res.status(200).json({
     status :200,
     success :true,
@@ -81,7 +81,7 @@ const RemoveAllCompletedTask = async(req,res,next) => {
 }
 
 const UserAndTask = async(req,res,next) => {
-   let response = await TaskRepository.UserAndTask(req.params.userid);
+   let response = await TaskRepository.UserAndTask(req.params);
    res.status(200).json({
     status :200,
     success :true,
