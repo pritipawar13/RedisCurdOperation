@@ -19,15 +19,14 @@ function hashPassword(password){
 }
 
 const RegisterUser = async (req, res, next) => {
-    //const result = await RegisterValidation.validateAsync(req.body);
    const Password = hashPassword(req.body.password)
-   const exist = await UserRepository.CheckUser(req.body.email);
+   const exist = await UserRepository.CheckUser(req.body);
     if(exist) {
         res.status(200).json({
             message:` ${req.body.email} already Found `
         })
     }
-    const user = new TodoUser({
+    const user = await new TodoUser({
         Firstname: req.body.firstname,
         Lastname: req.body.lastname,
         Email: req.body.email,
@@ -46,20 +45,20 @@ const RegisterUser = async (req, res, next) => {
 const LoginUser = async (req,res,next)=>{
    const email = req.body.email
    const Password = hashPassword(req.body.password)
-   const isemail = await UserRepository.CheckUser(req.body.email);;
+   const isemail = await UserRepository.CheckUser(req.body);
    if(!isemail) {
        res.status(400).json({
            meassage:`${email} not Registered`
        })
     }
-       const ispassword = await bcrypt.compare(req.body.password, Password);
-       if(!ispassword){
-           res.status(400).json({
-               message:"Not valid Password"
-           })
-        }
+    const ispassword = await bcrypt.compare(req.body.password, Password);
+    if(!ispassword) {
+        res.status(400).json({
+            message:"Not valid Password"
+        })
+    }
     userauth = { Email: email, Password:Password}
-    const accessToken = generateAccessToken(userauth)
+    const accessToken = await generateAccessToken(userauth)
     console.log(accessToken)
     res.status(200).json({
       status : 200,
@@ -79,7 +78,8 @@ const GetAllUserDetails = async (req,res,next) => {
 }
 
 const GetPerticularUser = async (req,res,next) => {
-    let response = await UserRepository.GetPerticularUserDetails(req.params.userid)
+   // let { userid }=req.query;
+    let response = await UserRepository.GetPerticularUserDetails(req.query)
     res.status(200).json({
         status: 200,
         success: true,
@@ -90,6 +90,7 @@ const GetPerticularUser = async (req,res,next) => {
 const GetPerticularUserByUsingToken= async (req,res,next) =>{
     var authHeader = req.headers.authorization.split(' ')[1];
     var token = jwt_decode(authHeader);
+    console.log(token)
     const response = await  UserRepository.GetUserByUsingToken(token)
     res.status(200).json({
         status: 200,
