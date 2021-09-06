@@ -10,7 +10,6 @@ const TodoUser = require('../Model/User')
 const UserRepository = require('../Repository/User-Repository')
 const redisConnection = require('../Helper/redisconnection')
 
-
 function generateAccessToken(user){
     return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET);
     //,{ expiresIn:'1h'});
@@ -22,7 +21,7 @@ function hashPassword(password){
 
 const RegisterUser = async (req, res, next) => {
     try {
-           const Password = hashPassword(req.body.password)
+           const Password = await hashPassword(req.body.password)
            const exist = await UserRepository.CheckUser(req.body)
            if(exist) {
              res.status(200).json({
@@ -35,6 +34,7 @@ const RegisterUser = async (req, res, next) => {
            Email: req.body.email,
            Usertype: req.body.type,
            Password: Password,
+          notes : req.body.notes,
            role : req.body.role
            })
           await user.save()
@@ -49,7 +49,7 @@ const RegisterUser = async (req, res, next) => {
          }
    };
 
-const LoginUser = async (req,res,next)=>{
+const LoginUser = async (req, res, next)=>{
     try {
    const email = req.body.email
    const Password = hashPassword(req.body.password)
