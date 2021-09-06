@@ -22,6 +22,12 @@ const UserSchema=new mongoose.Schema({
     Password:{
         type:String,
         required :true
+    },
+    role:{
+        type : String,
+        Default :'student',
+        enum :['student','admin','superadmin']
+
     }
 })
 
