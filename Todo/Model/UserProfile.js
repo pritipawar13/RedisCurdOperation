@@ -27,7 +27,7 @@ const Userprofile = new Schema ({
     createdAt: {
         type: Date,
         default: new Date(),
-      }
+      },
 })
 
 const userprofile = mongoose.model('UserProfile',Userprofile);
