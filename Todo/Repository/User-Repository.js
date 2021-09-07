@@ -15,7 +15,10 @@ const GetAllUser = async () => {
 }
 
 const GetPerticularUserDetails = async (userid) => {
-  return await TodoUser.where('_id', '==', userid)
+  console.log(userid)
+  var data = await TodoUser.findById({ '_id' : userid.userid });
+  console.log(data)
+  return data
 }
 
 const GetUserByUsingToken = async(token) => {

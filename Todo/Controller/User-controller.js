@@ -109,7 +109,8 @@ const GetAllUserDetails = async (req,res,next) => {
 
 const GetPerticularUser = async (req,res,next) => {
     try{
-          let response = await UserRepository.GetPerticularUserDetails(req.query)
+          let response = await UserRepository.GetPerticularUserDetails(req.params)
+          console.log(response)
           res.status(200).json({
              status: 200,
              success: true,
