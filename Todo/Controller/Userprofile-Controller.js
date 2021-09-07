@@ -36,7 +36,7 @@ const AddUserProfile = async (req, res) => {
         Firstname : data.Firstname,
         Lastname : data.Lastname ,
         Email : data.Email ,
-        Image : req.file.filename
+        Image : req.file.filename,
     })
    await userprofile.save()
     res.status(201).json({
