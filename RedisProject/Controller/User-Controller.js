@@ -53,6 +53,11 @@ const  GetUser = async (req,res) => {
 const DeleteUser = async(req,res) => {
     try{
         var id = req.params.userid ;
+        if(!id){
+            res.status(400).json({
+                status :400
+            })
+        }
         await RedisConnection.del(id ,(err ,data ) => {
             if(err) console.log(err);
             else{
@@ -65,7 +70,7 @@ const DeleteUser = async(req,res) => {
             }
         })
     }catch(err){
-        console.log(err)
+        console.log(err);
     }
 }
 
